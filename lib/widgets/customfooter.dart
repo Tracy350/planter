@@ -1,4 +1,5 @@
 import 'package:flourish/home/widget/custombuttonfilled.dart';
+import 'package:flourish/widgets/customtextfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -23,7 +24,7 @@ class CustomFooter extends StatelessWidget {
                   children: _buildFooterContent(isSmallScreen),
                 ),
         ),
-         _buildBottominfo()
+        _buildBottominfo()
       ],
     );
   }
@@ -34,7 +35,6 @@ class CustomFooter extends StatelessWidget {
       _buildLinksSection(),
       _buildHelpSection(),
       _buildNewsletterSection(isSmallScreen),
-     
     ];
   }
 
@@ -111,14 +111,7 @@ class CustomFooter extends StatelessWidget {
         const SizedBox(height: 10),
         SizedBox(
           width: isSmallScreen ? double.infinity : 250,
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Enter your email',
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-            ),
-          ),
+          child: CustomTextField(hintText: 'Email Address'),
         ),
         const SizedBox(height: 10),
         Custombuttonfilled(
