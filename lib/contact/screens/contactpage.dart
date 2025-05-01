@@ -31,7 +31,7 @@ class Contactpage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 50),
-                  Text(
+                  Text(textAlign: TextAlign.center,
                     'Get In Touch With Us',
                     style: GoogleFonts.poppins(
                       fontSize: 36,

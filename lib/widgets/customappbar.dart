@@ -93,13 +93,22 @@ class _CustomAppBarState extends State<CustomAppBar> {
   /// **Mobile Drawer Navigation**
   Widget _buildMobileDrawer(Size screenSize) {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      automaticallyImplyLeading: false, // prevent default back/hamburger icon
+      backgroundColor: Colors.white,
       elevation: 0,
-      leading: Builder(
-        builder: (context) => IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black),
-          onPressed: () => Scaffold.of(context).openDrawer(),
-        ),
+      title: Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.menu, color: Colors.black),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+          const Spacer(),
+          Image.asset(
+            "assets/fulllogo.png",
+            height: 40,
+          ),
+          const Spacer(flex: 2), // Push logo toward center
+        ],
       ),
     );
   }

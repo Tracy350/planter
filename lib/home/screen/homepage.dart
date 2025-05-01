@@ -1,9 +1,9 @@
 import 'package:flourish/home/widget/custombuttonfilled.dart';
 import 'package:flourish/home/widget/custombuttonoutlined.dart';
-import 'package:flourish/home/widget/responsive_banner.dart';
-import 'package:flourish/widgets/customfooter.dart';
 import 'package:flourish/home/widget/freeformimage.dart';
+import 'package:flourish/home/widget/responsive_banner.dart';
 import 'package:flourish/widgets/customappbar.dart';
+import 'package:flourish/widgets/customfooter.dart';
 import 'package:flourish/widgets/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -70,7 +70,8 @@ class _HomepageState extends State<Homepage> {
     ];
     final currentWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: CustomAppBar(),  drawer: const CustomDrawer(),
+      appBar: CustomAppBar(),
+      drawer: const CustomDrawer(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -91,8 +92,8 @@ class _HomepageState extends State<Homepage> {
             SizedBox(
               height: 400,
               child: ListView(
-                scrollDirection:
-                    currentWidth > 600 ? Axis.horizontal : Axis.vertical,
+                scrollDirection: Axis.horizontal,
+                // currentWidth > 600 ? Axis.horizontal : Axis.vertical,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
                   _buildRangeImage('assets/range1.png', 'Indoor'),
@@ -115,9 +116,9 @@ class _HomepageState extends State<Homepage> {
               child: GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: currentWidth > 600 ? 4 :2,
-                  crossAxisSpacing: 10,  
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: currentWidth > 600 ? 4 : 2,
+                  crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                   childAspectRatio: 0.9,
                 ),
@@ -201,118 +202,115 @@ class _HomepageState extends State<Homepage> {
               color: Colors.grey[300],
             ),
             CustomFooter(),
-          
           ],
         ),
       ),
     );
   }
 
+  Widget _buildRangeImage(String image, String text) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double imageHeight = constraints.maxWidth < 600 ? 200 : 300;
+        double imageWidth = constraints.maxWidth < 600 ? 150 : 200;
+        double fontSize = constraints.maxWidth < 600 ? 16 : 20;
 
-Widget _buildRangeImage(String image, String text) {
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      double imageHeight = constraints.maxWidth < 600 ? 200 : 300;
-      double imageWidth = constraints.maxWidth < 600 ? 150 : 200;
-      double fontSize = constraints.maxWidth < 600 ? 16 : 20;
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.asset(
+                  image,
+                  height: imageHeight,
+                  width: imageWidth,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                text,
+                style: GoogleFonts.poppins(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Column(
+  Widget _buildProductCard(
+      String image, String name, String category, String price) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double imageHeight = constraints.maxWidth < 600 ? double.infinity : 250;
+        double imageWidth = constraints.maxWidth < 600 ? double.infinity : 140;
+        double nameFontSize = constraints.maxWidth < 600 ? 14 : 16;
+        double categoryFontSize = constraints.maxWidth < 600 ? 12 : 14;
+        double priceFontSize = constraints.maxWidth < 600 ? 14 : 16;
+
+        return Stack(
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: Image.asset(
                 image,
-                height: imageHeight,
                 width: imageWidth,
+                height: imageHeight,
                 fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 10),
-            Text(
-              text,
-              style: GoogleFonts.poppins(
-                fontSize: fontSize,
-                fontWeight: FontWeight.w700,
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(15),
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: GoogleFonts.poppins(
+                        fontSize: nameFontSize,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      category,
+                      style: GoogleFonts.poppins(
+                        fontSize: categoryFontSize,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      price,
+                      style: GoogleFonts.poppins(
+                        fontSize: priceFontSize,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
-        ),
-      );
-    },
-  );
-}
-
-Widget _buildProductCard(
-    String image, String name, String category, String price) {
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      double imageHeight = constraints.maxWidth < 600 ? double.infinity : 250;
-      double imageWidth = constraints.maxWidth < 600 ? double.infinity : 140 ;
-      double nameFontSize = constraints.maxWidth < 600 ? 14 : 16;
-      double categoryFontSize = constraints.maxWidth < 600 ? 12 : 14;
-      double priceFontSize = constraints.maxWidth < 600 ? 14 : 16;
-
-      return Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: Image.asset(
-              image,
-              width: imageWidth,
-              height: imageHeight,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(15),
-                  bottomRight: Radius.circular(15),
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: GoogleFonts.poppins(
-                      fontSize: nameFontSize,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    category,
-                    style: GoogleFonts.poppins(
-                      fontSize: categoryFontSize,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    price,
-                    style: GoogleFonts.poppins(
-                      fontSize: priceFontSize,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      );
-    },
-  );
-}
-
+        );
+      },
+    );
+  }
 }

@@ -3,6 +3,7 @@ import 'package:flourish/cart/screen/cartpage.dart';
 import 'package:flourish/checkout/screens/checkout.dart';
 import 'package:flourish/contact/screens/contactpage.dart';
 import 'package:flourish/home/screen/homepage.dart';
+import 'package:flourish/shop/screens/plantdetails.dart';
 import 'package:flourish/shop/screens/shoppage.dart';
 import 'package:flutter/material.dart';
 
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
       "/about": (context) => Aboutpage(),
       "/contact": (context) => Contactpage(),
       "/cart": (context) => Cartpage(),
-      "/checkout": (context) => Checkout()
+      "/checkout": (context) => Checkout(),
     },
       debugShowCheckedModeBanner: false,
       home: const Homepage(),

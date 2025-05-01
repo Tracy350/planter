@@ -1,3 +1,4 @@
+import 'package:flourish/widgets/counter.dart';
 import 'package:flutter/material.dart';
 
 class CartContainer extends StatefulWidget {
@@ -22,20 +23,6 @@ class CartContainer extends StatefulWidget {
 
 class _CartContainerState extends State<CartContainer> {
   int quantity = 1;
-
-  void increment() {
-    setState(() {
-      quantity++;
-    });
-  }
-
-  void decrement() {
-    if (quantity > 1) {
-      setState(() {
-        quantity--;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,20 +108,13 @@ class _CartContainerState extends State<CartContainer> {
                     ),
 
                     // Counter
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.remove, color: Colors.red),
-                          onPressed: decrement,
-                        ),
-                        Text("$quantity",
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                        IconButton(
-                          icon: const Icon(Icons.add, color: Colors.green),
-                          onPressed: increment,
-                        ),
-                      ],
+                    CounterWidget(
+                      count: quantity,
+                      onChanged: (newCount) {
+                        setState(() {
+                          quantity = newCount;
+                        });
+                      },
                     ),
                   ],
                 ),

@@ -1,3 +1,4 @@
+import 'package:flourish/shop/screens/plantdetails.dart';
 import 'package:flourish/widgets/customappbar.dart';
 import 'package:flourish/widgets/customfooter.dart';
 import 'package:flourish/widgets/customheader.dart';
@@ -15,26 +16,26 @@ class _ShoppageState extends State<Shoppage> {
   List<Map<String, String>> products = [
     {
       'image': 'assets/plant1.jpg',
-      'name': 'Nike Air',
-      'category': 'Shoes',
+      'name': 'Monstera Deliciosa',
+      'category': 'Indoor',
       'price': '\$120'
     },
     {
       'image': 'assets/plant2.jpg',
-      'name': 'Leather Bag',
-      'category': 'Bags',
+      'name': 'Fiddle Leaf Fig',
+      'category': 'Outdoor',
       'price': '\$200'
     },
     {
       'image': 'assets/plant3.jpg',
-      'name': 'Rolex Watch',
-      'category': 'Watches',
+      'name': 'Snake Plant',
+      'category': 'Acquatic',
       'price': '\$1500'
     },
     {
       'image': 'assets/plant4.jpg',
-      'name': 'Denim Jacket',
-      'category': 'Clothing',
+      'name': 'Spider Plant',
+      'category': 'Indoor',
       'price': '\$80'
     },
     {
@@ -138,13 +139,17 @@ class _ShoppageState extends State<Shoppage> {
   @override
   Widget build(BuildContext context) {
     final currentWidth = MediaQuery.of(context).size.width;
+    final isMobile = currentWidth > 600;
     return Scaffold(
       appBar: CustomAppBar(),
       drawer: const CustomDrawer(),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Customheader(currentpage: 'Shop',pagepath: 'Home > Shop',),
+            Customheader(
+              currentpage: 'Shop',
+              pagepath: 'Home > Shop',
+            ),
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -152,7 +157,7 @@ class _ShoppageState extends State<Shoppage> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: currentWidth > 600 ? 4 : 2,
+                  crossAxisCount: isMobile ? 4 : 2,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                   childAspectRatio: 0.9,
@@ -176,7 +181,11 @@ class _ShoppageState extends State<Shoppage> {
   }
 
   Widget _buildProductCard(
-      String image, String name, String category, String price) {
+    String image,
+    String name,
+    String category,
+    String price,
+  ) {
     return LayoutBuilder(
       builder: (context, constraints) {
         double imageHeight = constraints.maxWidth < 600 ? double.infinity : 250;
@@ -185,62 +194,77 @@ class _ShoppageState extends State<Shoppage> {
         double categoryFontSize = constraints.maxWidth < 600 ? 12 : 14;
         double priceFontSize = constraints.maxWidth < 600 ? 14 : 16;
 
-        return Stack(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.asset(
-                image,
-                width: imageWidth,
-                height: imageHeight,
-                fit: BoxFit.cover,
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PlantDetailsPage(
+                  image: image,
+                  name: name,
+                  category: category,
+                  price: price,
+                ),
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15),
+            );
+          },
+          child: Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.asset(
+                  image,
+                  width: imageWidth,
+                  height: imageHeight,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: GoogleFonts.poppins(
+                          fontSize: nameFontSize,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        category,
+                        style: GoogleFonts.poppins(
+                          fontSize: categoryFontSize,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        price,
+                        style: GoogleFonts.poppins(
+                          fontSize: priceFontSize,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: GoogleFonts.poppins(
-                        fontSize: nameFontSize,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      category,
-                      style: GoogleFonts.poppins(
-                        fontSize: categoryFontSize,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      price,
-                      style: GoogleFonts.poppins(
-                        fontSize: priceFontSize,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
