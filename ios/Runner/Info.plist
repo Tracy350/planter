@@ -45,5 +45,25 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!-- ✅ Add these for location permission -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to your location while in use.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs access to your location even in the background.</string>
+
+	<!-- ✅ Add this for embedding maps, webviews, etc. -->
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+
+	<!-- ✅ Optional: Camera, Microphone, Photo Library (if needed) -->
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs camera access to take photos.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to your photo library.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs microphone access to record audio.</string>
+
+
 </dict>
 </plist>
