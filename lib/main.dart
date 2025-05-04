@@ -1,4 +1,5 @@
 import 'package:flourish/about/screens/aboutpage.dart';
+import 'package:flourish/auth/screens/sign_in.dart';
 import 'package:flourish/cart/screen/cartpage.dart';
 import 'package:flourish/checkout/screens/checkout.dart';
 import 'package:flourish/contact/screens/contactpage.dart';
@@ -38,16 +39,16 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ), initialRoute: "/home",
-    routes: {
-      "/home": (context) => Homepage(),
-      "/shop": (context) => Shoppage(),
-      "/about": (context) => Aboutpage(),
-      "/contact": (context) => Contactpage(),
-      "/cart": (context) => Cartpage(),
-      "/checkout": (context) => Checkout(),
-    },
+    // routes: {
+    //   "/home": (context) => Homepage(),
+    //   "/shop": (context) => Shoppage(),
+    //   "/about": (context) => Aboutpage(),
+    //   "/contact": (context) => Contactpage(),
+    //   "/cart": (context) => Cartpage(),
+    //   "/checkout": (context) => Checkout(),
+    // },
       debugShowCheckedModeBanner: false,
-      home: const Homepage(),
+      home: const SignInScreen()
     );
   }
 }
