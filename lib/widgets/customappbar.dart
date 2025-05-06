@@ -1,4 +1,7 @@
+import 'package:flourish/auth/screens/sign_up.dart';
+import 'package:flourish/models/usermodels.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
@@ -86,7 +89,28 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget _buildIcon(IconData icon, String route) {
     return IconButton(
       icon: Icon(icon, color: Colors.black54),
-      onPressed: () => Navigator.pushNamed(context, route),
+      onPressed: () {
+        final userModel = Provider.of<UserModel?>(context, listen: false);
+
+        if (icon == Icons.person) {
+          // Check if user is signed in
+          if (userModel == null) {
+            // If not signed in, navigate to sign up/sign in page
+       Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SignUpScreen(toggleView: ,), // Your sign-up page
+              ),
+            );
+          } else {
+            // If signed in, navigate to the profile page
+            Navigator.pushNamed(context, '/profile');
+          }
+        } else {
+          // For other icons, navigate as usual
+          Navigator.pushNamed(context, route);
+        }
+      },
     );
   }
 
@@ -153,6 +177,7 @@ class CustomDrawer extends StatelessWidget {
           _buildDrawerItem(context, "Shop", "/shop"),
           _buildDrawerItem(context, "About", "/about"),
           _buildDrawerItem(context, "Contact", "/contact"),
+          _buildDrawerItem(context, "Profile", "/profile"),
         ],
       ),
     );

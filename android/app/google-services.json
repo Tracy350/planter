@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "526099174197",
+    "project_id": "planta-f9ecd",
+    "storage_bucket": "planta-f9ecd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:526099174197:android:3515cc6dbe3290203bb27c",
+        "android_client_info": {
+          "package_name": "com.example.flourish"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "526099174197-9v3k44jeemeb6qulvc440gvikvok3kb9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO7ugAVJS_tMzM14aRU4UUPcqbJkUW1pE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "526099174197-9v3k44jeemeb6qulvc440gvikvok3kb9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "526099174197-ussj9h3ujbi3j6h0jalnroeceulpk7ou.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flourish"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

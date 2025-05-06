@@ -1,4 +1,4 @@
-import 'package:flourish/home/widget/custombuttonfilled.dart';
+import 'package:flourish/features/home/widget/custombuttonfilled.dart';
 import 'package:flourish/widgets/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
