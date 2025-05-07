@@ -1,3 +1,4 @@
+import 'package:flourish/auth/screens/sign_in.dart';
 import 'package:flourish/core/services/auth_services.dart';
 import 'package:flourish/features/home/widget/custombuttonfilled.dart';
 import 'package:flourish/widgets/customtextfield.dart';
@@ -7,8 +8,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:typewritertext/typewritertext.dart';
 
 class SignUpScreen extends StatefulWidget {
-  final Function toggleView;
-  const SignUpScreen({super.key, required this.toggleView});
+  const SignUpScreen({
+    super.key,
+  });
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -21,18 +23,14 @@ class _SignUpScreenState extends State<SignUpScreen>
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final AuthService _authService = AuthService();
+  final AuthServices authService = AuthServices();
   late AnimationController _animationController;
   late Animation<double> _logoScaleAnimation;
   late Animation<double> _logoFadeAnimation;
   bool loading = false;
-  final email = '';
-  final password = '';
-  final firstName = '';
-  final lastName = '';
-  final phoneNumber = '';
-  String error = '';
 
   @override
   void initState() {
@@ -56,15 +54,40 @@ class _SignUpScreenState extends State<SignUpScreen>
     );
   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
+  void signUp() async {
+//prepare data
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final lastName = _lastNameController.text.trim();
+    final firstName = _firstNameController.text.trim();
+    final phoneNumber = _phoneNumberController.text.trim();
+    final _confirmPassword = _confirmPasswordController.text.trim();
+
+//check that passwords match
+    if (password != _confirmPassword) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Passwords dont match')));
+      return;
+    }
+
+//attempt login
+    try {
+      await authService.signInWithEmailAndPassword(email, password);
+      Navigator.pop(context);
+    } catch (e) {
+      print(e);
+    }
   }
 
-  void _signUp() async {}
+  // @override
+  // void dispose() {
+  //   _animationController.dispose();
+  //   _emailController.dispose();
+  //   _passwordController.dispose();
+  //   super.dispose();
+  // }
+
+  // void _signUp() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -106,87 +129,101 @@ class _SignUpScreenState extends State<SignUpScreen>
                             duration: const Duration(milliseconds: 50),
                           ),
                           const SizedBox(height: 40),
-                        Form(
-                          key: _formKey,
-                          child: Column(children: [
-                            CustomTextField(
-                            controller: _emailController,
-                            hintText: 'Email',
-                            prefixIcon: const Icon(Icons.email),
-                          ),
-                          const SizedBox(height: 20),
-                          CustomTextField(
-                            controller: _passwordController,
-                            hintText: 'Password',
-                            prefixIcon: const Icon(Icons.lock),
-                            obscureText: true,
-                            suffixIcon: const Icon(Icons.remove_red_eye),
-                          ),
-                          const SizedBox(height: 20),
-                          CustomTextField(
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Enter a valid first name';
-                              }
-                              return null;
-                            },
-                            controller: _firstNameController,
-                            hintText: 'First Name',
-                            prefixIcon: const Icon(Icons.person),
-                          ),
-                          const SizedBox(height: 20),
-                          CustomTextField(
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Enter a valid last name';
-                              }
-                              return null;
-                            },
-                            controller: _lastNameController,
-                            hintText: 'Last Name',
-                            prefixIcon: const Icon(Icons.person),
-                          ),
-                          const SizedBox(height: 20),
-                          CustomTextField(
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Enter a valid phone number';
-                              }
-                              return null;
-                            },
-                            controller: _phoneNumberController,
-                            hintText: 'Phone Number',
-                            prefixIcon: const Icon(Icons.phone),
-                          ),
-                        ],)),
+                          Form(
+                              key: _formKey,
+                              child: Column(
+                                children: [
+                                  CustomTextField(
+                                    controller: _emailController,
+                                    hintText: 'Email',
+                                    prefixIcon: const Icon(Icons.email),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  CustomTextField(
+                                    controller: _passwordController,
+                                    hintText: 'Password',
+                                    prefixIcon: const Icon(Icons.lock),
+                                    obscureText: true,
+                                    suffixIcon:
+                                        const Icon(Icons.remove_red_eye),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  const SizedBox(height: 20),
+                                  CustomTextField(
+                                    controller: _confirmPasswordController,
+                                    hintText: 'Password',
+                                    prefixIcon: const Icon(Icons.lock),
+                                    obscureText: true,
+                                    suffixIcon:
+                                        const Icon(Icons.remove_red_eye),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  CustomTextField(
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Enter a valid first name';
+                                      }
+                                      return null;
+                                    },
+                                    controller: _firstNameController,
+                                    hintText: 'First Name',
+                                    prefixIcon: const Icon(Icons.person),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  CustomTextField(
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Enter a valid last name';
+                                      }
+                                      return null;
+                                    },
+                                    controller: _lastNameController,
+                                    hintText: 'Last Name',
+                                    prefixIcon: const Icon(Icons.person),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  CustomTextField(
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Enter a valid phone number';
+                                      }
+                                      return null;
+                                    },
+                                    controller: _phoneNumberController,
+                                    hintText: 'Phone Number',
+                                    prefixIcon: const Icon(Icons.phone),
+                                  ),
+                                ],
+                              )),
                           const SizedBox(height: 30),
                           Custombuttonfilled(
-  height: 50,
-  width: isMobile
-      ? 200
-      : MediaQuery.of(context).size.width,
-  text: 'Sign Up',
-  onTap: () async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => loading = true);
-      dynamic result = await _authService.signUp(
-        _emailController.text.trim(),
-        _passwordController.text.trim(),
-        _firstNameController.text.trim(),
-        _lastNameController.text.trim(),
-        _phoneNumberController.text.trim(),
-      );
-      if (result == null) {
-        setState(() {
-          error = 'Please provide a valid email';
-          loading = false;
-        });
-      } else {
-        // Handle success (e.g., navigate or show dialog)
-      }
-    }
-  },
-),
+                              height: 50,
+                              width: isMobile
+                                  ? 200
+                                  : MediaQuery.of(context).size.width,
+                              text: 'Sign Up',
+                              onTap: () {}
+                              // () async {
+                              //   if (_formKey.currentState!.validate()) {
+                              //     setState(() => loading = true);
+                              //     dynamic result = await _authService.signUp(
+                              //       _emailController.text.trim(),
+                              //       _passwordController.text.trim(),
+                              //       _firstNameController.text.trim(),
+                              //       _lastNameController.text.trim(),
+                              //       _phoneNumberController.text.trim(),
+                              //     );
+                              //     if (result == null) {
+                              //       setState(() {
+                              //         error = 'Please provide a valid email';
+                              //         loading = false;
+                              //       });
+                              //     } else {
+                              //       // Handle success (e.g., navigate or show dialog)
+                              //     }
+                              //   }
+                              // },
+                              ),
 
                           // Custombuttonfilled(
                           //   height: 50,
@@ -235,7 +272,11 @@ class _SignUpScreenState extends State<SignUpScreen>
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      widget.toggleView();
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SignInScreen()));
                                     },
                                 ),
                               ],

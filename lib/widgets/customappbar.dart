@@ -1,4 +1,5 @@
 import 'package:flourish/auth/authenticate.dart';
+import 'package:flourish/core/services/auth_gate.dart';
 import 'package:flourish/features/home/widget/product_search_delegate.dart';
 import 'package:flourish/models/usermodels.dart';
 import 'package:flutter/material.dart';
@@ -97,7 +98,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           if (userModel == null) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Authenticate()),
+              MaterialPageRoute(builder: (context) => AuthGate()),
             );
           } else {
             Navigator.pushNamed(context, '/profile');

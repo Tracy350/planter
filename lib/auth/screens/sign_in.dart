@@ -1,3 +1,4 @@
+import 'package:flourish/auth/screens/sign_up.dart';
 import 'package:flourish/core/services/auth_services.dart';
 import 'package:flourish/features/home/widget/custombuttonfilled.dart';
 import 'package:flourish/widgets/customtextfield.dart';
@@ -7,8 +8,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:typewritertext/typewritertext.dart';
 
 class SignInScreen extends StatefulWidget {
-  final Function toggleView;
-  const SignInScreen({super.key, required this.toggleView});
+  // final Function toggleView;
+  const SignInScreen({
+    super.key,
+  });
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -18,16 +21,13 @@ class _SignInScreenState extends State<SignInScreen>
     with SingleTickerProviderStateMixin {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final AuthService _authService = AuthService();
+  final AuthServices authService = AuthServices();
 
   late AnimationController _animationController;
   late Animation<double> _logoScaleAnimation;
   late Animation<double> _logoFadeAnimation;
 
   final _formKey = GlobalKey<FormState>();
-  String error = '';
-  String email = '';
-  String password = '';
 
   @override
   void initState() {
@@ -59,38 +59,50 @@ class _SignInScreenState extends State<SignInScreen>
     super.dispose();
   }
 
-  void _signIn() async {
-    print("object");
+  void signIn() async {
+//prepare data
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    // Check if email or password is empty
-    if (email.isEmpty || password.isEmpty) {
-      print("NO INUPT");
-      setState(() {
-        error = 'Email and password cannot be empty';
-      });
-
-      return;
-    }
-
+//attempt login
     try {
-      // Attempt to sign in
-      dynamic result = await _authService.signIn(email, password);
-      if (result == null) {
-        setState(() {
-          error = 'Could not sign in with the provided credentials';
-        });
-      } else {
-        widget.toggleView();
-      }
+      await authService.signInWithEmailAndPassword(email, password);
     } catch (e) {
-      // Handle unexpected errors
-      setState(() {
-        error = 'An unexpected error occurred: ${e.toString()}';
-      });
+      print(e);
     }
   }
+  // void _signIn() async {
+  //   print("object");
+  //   final email = _emailController.text.trim();
+  //   final password = _passwordController.text.trim();
+
+  //   // Check if email or password is empty
+  //   if (email.isEmpty || password.isEmpty) {
+  //     print("NO INUPT");
+  //     setState(() {
+  //       error = 'Email and password cannot be empty';
+  //     });
+
+  //     return;
+  //   }
+
+  //   try {
+  //     // Attempt to sign in
+  //     dynamic result = await _authService.signIn(email, password);
+  //     if (result == null) {
+  //       setState(() {
+  //         error = 'Could not sign in with the provided credentials';
+  //       });
+  //     } else {
+  //       widget.toggleView();
+  //     }
+  //   } catch (e) {
+  //     // Handle unexpected errors
+  //     setState(() {
+  //       error = 'An unexpected error occurred: ${e.toString()}';
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -138,9 +150,7 @@ class _SignInScreenState extends State<SignInScreen>
                               prefixIcon: const Icon(Icons.email),
                               validator: (value) =>
                                   value!.isEmpty ? 'Enter a valid email' : null,
-                              onChanged: (value) {
-                                setState(() => email = value);
-                              },
+                              onChanged: (value) {},
                             ),
                             const SizedBox(height: 20),
                             CustomTextField(
@@ -152,21 +162,19 @@ class _SignInScreenState extends State<SignInScreen>
                               prefixIcon: const Icon(Icons.lock),
                               obscureText: true,
                               suffixIcon: const Icon(Icons.remove_red_eye),
-                              onChanged: (value) {
-                                setState(() => password = value);
-                              },
+                              onChanged: (value) {},
                             ),
                           ],
                         ),
                       ),
                       const SizedBox(height: 30),
                       Custombuttonfilled(
-                        height: 50,
-                        width:
-                            isMobile ? 200 : MediaQuery.of(context).size.width,
-                        text: 'Sign In',
-                        onTap: _signIn,
-                      ),
+                          height: 50,
+                          width: isMobile
+                              ? 200
+                              : MediaQuery.of(context).size.width,
+                          text: 'Sign In',
+                          onTap: () {}),
                       const SizedBox(height: 10),
                       TextButton(
                         onPressed: () {},
@@ -182,18 +190,18 @@ class _SignInScreenState extends State<SignInScreen>
                           ),
                           children: [
                             TextSpan(
-                              text: ' Sign Up',
-                              style: GoogleFonts.poppins(
-                                color: Colors.green, // Use any accent color
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                decoration: TextDecoration.underline,
-                              ),
-                              recognizer: TapGestureRecognizer()
+                                text: ' Sign Up',
+                                style: GoogleFonts.poppins(
+                                  color: Colors.green, // Use any accent color
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  widget.toggleView();
+                                 Navigator.push(context, MaterialPageRoute(builder: (context)=> SignUpScreen()));
                                 },
-                            ),
+                                ),
                           ],
                         ),
                       )
