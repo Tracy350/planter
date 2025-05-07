@@ -1,3 +1,4 @@
+import 'package:flourish/auth/authenticate.dart';
 import 'package:flourish/auth/screens/sign_up.dart';
 import 'package:flourish/models/usermodels.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +100,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
        Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const SignUpScreen(toggleView: ,), // Your sign-up page
+                builder: (context) => Authenticate(), // Your sign-up page
               ),
             );
           } else {

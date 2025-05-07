@@ -1,5 +1,8 @@
+import 'package:flourish/models/product_models.dart';
+import 'package:flourish/models/shop_models.dart';
 import 'package:flourish/widgets/counter.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CartContainer extends StatefulWidget {
   final String imageUrl;
@@ -7,6 +10,7 @@ class CartContainer extends StatefulWidget {
   final double price;
   final double rating;
   final int reviews;
+  final Product product;
 
   const CartContainer({
     super.key,
@@ -15,6 +19,7 @@ class CartContainer extends StatefulWidget {
     required this.price,
     required this.rating,
     required this.reviews,
+    required this.product,
   });
 
   @override
@@ -22,6 +27,10 @@ class CartContainer extends StatefulWidget {
 }
 
 class _CartContainerState extends State<CartContainer> {
+  void removeItemFromCart(BuildContext context, Product product) {
+    context.read<Shop>().removeFromCart(product);
+  }
+
   int quantity = 1;
 
   @override
@@ -73,7 +82,7 @@ class _CartContainerState extends State<CartContainer> {
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
                       onPressed: () {
-                        // Handle item removal
+                        removeItemFromCart(context, widget.product);
                       },
                     ),
                   ],

@@ -8,6 +8,7 @@ import 'package:flourish/features/home/screen/homepage.dart';
 import 'package:flourish/features/profile/screens/profile.dart';
 import 'package:flourish/features/shop/screens/shoppage.dart';
 import 'package:flourish/firebase_options.dart';
+import 'package:flourish/models/shop_models.dart';
 import 'package:flourish/models/usermodels.dart';
 import 'package:flourish/wrapper.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(create: (context)=> Shop(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

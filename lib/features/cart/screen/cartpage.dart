@@ -1,11 +1,13 @@
 import 'package:flourish/features/cart/widgets/cart_container.dart';
 import 'package:flourish/features/home/widget/custombuttonoutlined.dart';
+import 'package:flourish/models/shop_models.dart';
 import 'package:flourish/widgets/customappbar.dart';
 import 'package:flourish/widgets/customfooter.dart';
 import 'package:flourish/widgets/customheader.dart';
 import 'package:flourish/widgets/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class Cartpage extends StatelessWidget {
   const Cartpage({super.key});
@@ -14,6 +16,7 @@ class Cartpage extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     bool isMobile = screenWidth < 600; // Check if screen width is below 600px
+    final cart = context.watch<Shop>().cart;
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -31,9 +34,9 @@ class Cartpage extends StatelessWidget {
               child: isMobile
                   ? Column(
                       children: [
-                        _buildCartItems(),
+                        _buildCartItems(context),
                         // const SizedBox(height: 10),
-                        _buildCartTotal(context),
+                        if (cart.isNotEmpty) _buildCartTotal(context),
                       ],
                     )
                   : Row(
@@ -43,12 +46,14 @@ class Cartpage extends StatelessWidget {
                           flex: 2,
                           child: Column(
                             children: [
-                              _buildCartItems(),
+                              _buildCartItems(context),
                             ],
                           ),
                         ),
-                        const SizedBox(width: 16),
-                        Expanded(flex: 1, child: _buildCartTotal(context)),
+                        if (cart.isNotEmpty) ...[
+                          const SizedBox(width: 16),
+                          Expanded(flex: 1, child: _buildCartTotal(context)),
+                        ],
                       ],
                     ),
             ),
@@ -61,29 +66,53 @@ class Cartpage extends StatelessWidget {
     );
   }
 
-  Widget _buildCartItems() {
-    return ListView(
-      shrinkWrap: true, // Ensures it takes only the needed space
-      physics:
-          const NeverScrollableScrollPhysics(), // Prevents nested scrolling
-      padding: const EdgeInsets.all(16),
-      children: const [
-        CartContainer(
-          imageUrl: "assets/plant1.jpg",
-          name: "Stylish Sneakers",
-          price: 49.99,
-          rating: 4.5,
-          reviews: 120,
-        ),
-        CartContainer(
-          imageUrl: "assets/plant1.jpg",
-          name: "Casual Jacket",
-          price: 79.99,
-          rating: 4.8,
-          reviews: 200,
-        ),
-      ],
-    );
+  Widget _buildCartItems(BuildContext context) {
+    final cart = context.watch<Shop>().cart;
+    double screenWidth = MediaQuery.of(context).size.width;
+    bool isMobile = screenWidth < 600; // Check if screen width is below 600px
+    if (cart.isEmpty) {
+      return Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/empty.png',
+                scale: isMobile ? 1.5 : 2.5, // Increased scale = smaller image
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Your cart is empty',
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ));
+    }
+    return ListView.builder(
+        itemCount: cart.length,
+        shrinkWrap: true, // Ensures it takes only the needed space
+        physics:
+            const NeverScrollableScrollPhysics(), // Prevents nested scrolling
+        padding: const EdgeInsets.all(16),
+        itemBuilder: (context, index) {
+          //get individual item from cart
+          final item = cart[index];
+
+          //return cart tile
+          return CartContainer(
+            product: item,
+            imageUrl: item.imageUrl,
+            name: item.name,
+            price: item.price,
+            rating: double.tryParse(item.rating ?? '0') ??
+                0.0, // or item.rating!.toDouble()
+            reviews: item.reviews ?? 0, // or item.reviews!
+          );
+        });
   }
 
   Widget _buildCartTotal(BuildContext context) {

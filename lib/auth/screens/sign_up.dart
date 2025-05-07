@@ -1,4 +1,4 @@
-import 'package:flourish/auth/screens/sign_in.dart';
+import 'package:flourish/core/services/auth_services.dart';
 import 'package:flourish/features/home/widget/custombuttonfilled.dart';
 import 'package:flourish/widgets/customtextfield.dart';
 import 'package:flutter/gestures.dart';
@@ -11,18 +11,28 @@ class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key, required this.toggleView});
 
   @override
-  State<SignUpScreen> createState() => _SignInScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignInScreenState extends State<SignUpScreen>
+class _SignUpScreenState extends State<SignUpScreen>
     with SingleTickerProviderStateMixin {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final AuthService _authService = AuthService();
   late AnimationController _animationController;
   late Animation<double> _logoScaleAnimation;
   late Animation<double> _logoFadeAnimation;
-  
+  bool loading = false;
+  final email = '';
+  final password = '';
+  final firstName = '';
+  final lastName = '';
+  final phoneNumber = '';
+  String error = '';
 
   @override
   void initState() {
@@ -54,12 +64,7 @@ class _SignInScreenState extends State<SignUpScreen>
     super.dispose();
   }
 
-  void _signIn() {
-    final email = _emailController.text;
-    final password = _passwordController.text;
-    // Implement your sign-in logic here
-    print('Email: $email, Password: $password');
-  }
+  void _signUp() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -69,9 +74,7 @@ class _SignInScreenState extends State<SignUpScreen>
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: ConstrainedBox(
-           constraints: BoxConstraints(
-              maxHeight: double.infinity
-            ),
+          constraints: BoxConstraints(maxHeight: double.infinity),
           child: Center(
             child: AnimatedBuilder(
               animation: _animationController,
@@ -93,13 +96,20 @@ class _SignInScreenState extends State<SignUpScreen>
                               height: 200,
                               width: 200,
                             ),
-                          ),const SizedBox(height: 40),
-                          TypeWriter.text(
-            'Welcome to PlantA. Please Sign Up',style: GoogleFonts.poppins(fontSize: 30, fontWeight: FontWeight.w700),textAlign: TextAlign.center,
-            duration: const Duration(milliseconds: 50),
-          ),
+                          ),
                           const SizedBox(height: 40),
-                          CustomTextField(
+                          TypeWriter.text(
+                            'Welcome to PlantA. Please Sign Up',
+                            style: GoogleFonts.poppins(
+                                fontSize: 30, fontWeight: FontWeight.w700),
+                            textAlign: TextAlign.center,
+                            duration: const Duration(milliseconds: 50),
+                          ),
+                          const SizedBox(height: 40),
+                        Form(
+                          key: _formKey,
+                          child: Column(children: [
+                            CustomTextField(
                             controller: _emailController,
                             hintText: 'Email',
                             prefixIcon: const Icon(Icons.email),
@@ -114,61 +124,123 @@ class _SignInScreenState extends State<SignUpScreen>
                           ),
                           const SizedBox(height: 20),
                           CustomTextField(
-                            controller: _emailController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Enter a valid first name';
+                              }
+                              return null;
+                            },
+                            controller: _firstNameController,
                             hintText: 'First Name',
                             prefixIcon: const Icon(Icons.person),
                           ),
                           const SizedBox(height: 20),
                           CustomTextField(
-                            controller: _emailController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Enter a valid last name';
+                              }
+                              return null;
+                            },
+                            controller: _lastNameController,
                             hintText: 'Last Name',
                             prefixIcon: const Icon(Icons.person),
                           ),
                           const SizedBox(height: 20),
                           CustomTextField(
-                            controller: _emailController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Enter a valid phone number';
+                              }
+                              return null;
+                            },
+                            controller: _phoneNumberController,
                             hintText: 'Phone Number',
                             prefixIcon: const Icon(Icons.phone),
                           ),
+                        ],)),
                           const SizedBox(height: 30),
                           Custombuttonfilled(
-                            height: 50,
-                            width: isMobile ? 200 : MediaQuery.of(context).size.width,
-                            text: 'Sign In',
-                            onTap: _signIn,
-                          ),
+  height: 50,
+  width: isMobile
+      ? 200
+      : MediaQuery.of(context).size.width,
+  text: 'Sign Up',
+  onTap: () async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => loading = true);
+      dynamic result = await _authService.signUp(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+        _firstNameController.text.trim(),
+        _lastNameController.text.trim(),
+        _phoneNumberController.text.trim(),
+      );
+      if (result == null) {
+        setState(() {
+          error = 'Please provide a valid email';
+          loading = false;
+        });
+      } else {
+        // Handle success (e.g., navigate or show dialog)
+      }
+    }
+  },
+),
+
+                          // Custombuttonfilled(
+                          //   height: 50,
+                          //   width: isMobile
+                          //       ? 200
+                          //       : MediaQuery.of(context).size.width,
+                          //   text: 'Sign In',
+                          //   onTap: () async {
+                          //     widget.toggleView();
+                          //     // Implement your sign-in logic here
+                          //     print('Email: $email, Password: $password');
+                          //     if (_formKey.currentState!.validate()) {
+                          //       setState(() => loading = true);
+                          //       dynamic result =
+                          //           await _authService.signUp(email, password);
+                          //       if (result == null) {
+                          //         setState(() {
+                          //           error = 'Please provide n valid email';
+                          //           loading = false;
+                          //         });
+                          //       }
+                          //     }
+                          //   },
+                          // ),
                           const SizedBox(height: 10),
                           TextButton(
                             onPressed: () {},
                             child: const Text('Forgot password?'),
                           ),
-          
-                                        
                           RichText(
-            textAlign: TextAlign.center,
-            text: TextSpan(
-              text: "Already have an account?",
-              style: GoogleFonts.poppins(
-          color: Colors.grey,
-          fontSize: 15,
-              ),
-              children: [
-          TextSpan(
-            text: 'Sign in',
-            style: GoogleFonts.poppins(
-              color: Colors.green, // Use any accent color
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              decoration: TextDecoration.underline,
-            ),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                widget.toggleView();
-              },
-          ),
-              ],
-            ),
-          )
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              text: "Already have an account?",
+                              style: GoogleFonts.poppins(
+                                color: Colors.grey,
+                                fontSize: 15,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: 'Sign in',
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.green, // Use any accent color
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      widget.toggleView();
+                                    },
+                                ),
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),

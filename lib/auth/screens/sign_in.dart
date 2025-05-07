@@ -1,4 +1,3 @@
-import 'package:flourish/auth/screens/sign_up.dart';
 import 'package:flourish/core/services/auth_services.dart';
 import 'package:flourish/features/home/widget/custombuttonfilled.dart';
 import 'package:flourish/widgets/customtextfield.dart';
@@ -20,12 +19,13 @@ class _SignInScreenState extends State<SignInScreen>
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
+
   late AnimationController _animationController;
   late Animation<double> _logoScaleAnimation;
   late Animation<double> _logoFadeAnimation;
 
   final _formKey = GlobalKey<FormState>();
-  String errorMessage = '';
+  String error = '';
   String email = '';
   String password = '';
 
@@ -60,11 +60,36 @@ class _SignInScreenState extends State<SignInScreen>
   }
 
   void _signIn() async {
-    dynamic result = await _authService.signInAnonymously();
-    final email = _emailController.text;
-    final password = _passwordController.text;
-    // Implement your sign-in logic here
-    print('Email: $email, Password: $password');
+    print("object");
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    // Check if email or password is empty
+    if (email.isEmpty || password.isEmpty) {
+      print("NO INUPT");
+      setState(() {
+        error = 'Email and password cannot be empty';
+      });
+
+      return;
+    }
+
+    try {
+      // Attempt to sign in
+      dynamic result = await _authService.signIn(email, password);
+      if (result == null) {
+        setState(() {
+          error = 'Could not sign in with the provided credentials';
+        });
+      } else {
+        widget.toggleView();
+      }
+    } catch (e) {
+      // Handle unexpected errors
+      setState(() {
+        error = 'An unexpected error occurred: ${e.toString()}';
+      });
+    }
   }
 
   @override
@@ -103,29 +128,36 @@ class _SignInScreenState extends State<SignInScreen>
                         duration: const Duration(milliseconds: 50),
                       ),
                       const SizedBox(height: 40),
-                      CustomTextField(
-                        controller: _emailController,
-                        hintText: 'Email',
-                        prefixIcon: const Icon(Icons.email),
-                        validator: (value) =>
-                            value!.isEmpty ? 'Enter a valid email' : null,
-                        onChanged: (value) {
-                          setState(() => email = value);
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      CustomTextField(
-                        validator: (value) => value!.length < 6
-                            ? 'Enter a password 6+ charts long'
-                            : null,
-                        controller: _passwordController,
-                        hintText: 'Password',
-                        prefixIcon: const Icon(Icons.lock),
-                        obscureText: true,
-                        suffixIcon: const Icon(Icons.remove_red_eye),
-                        onChanged: (value) {
-                          setState(() => password = value);
-                        },
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            CustomTextField(
+                              controller: _emailController,
+                              hintText: 'Email',
+                              prefixIcon: const Icon(Icons.email),
+                              validator: (value) =>
+                                  value!.isEmpty ? 'Enter a valid email' : null,
+                              onChanged: (value) {
+                                setState(() => email = value);
+                              },
+                            ),
+                            const SizedBox(height: 20),
+                            CustomTextField(
+                              validator: (value) => value!.length < 6
+                                  ? 'Enter a password 6+ charts long'
+                                  : null,
+                              controller: _passwordController,
+                              hintText: 'Password',
+                              prefixIcon: const Icon(Icons.lock),
+                              obscureText: true,
+                              suffixIcon: const Icon(Icons.remove_red_eye),
+                              onChanged: (value) {
+                                setState(() => password = value);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 30),
                       Custombuttonfilled(
@@ -143,14 +175,14 @@ class _SignInScreenState extends State<SignInScreen>
                       RichText(
                         textAlign: TextAlign.center,
                         text: TextSpan(
-                          text: "Already have an account? ",
+                          text: "Dont have an account? ",
                           style: GoogleFonts.poppins(
                             color: Colors.grey,
                             fontSize: 15,
                           ),
                           children: [
                             TextSpan(
-                              text: ' Sign in',
+                              text: ' Sign Up',
                               style: GoogleFonts.poppins(
                                 color: Colors.green, // Use any accent color
                                 fontSize: 15,
@@ -159,7 +191,7 @@ class _SignInScreenState extends State<SignInScreen>
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                widget.toggleView();
+                                  widget.toggleView();
                                 },
                             ),
                           ],

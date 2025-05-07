@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flourish/models/usermodels.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   // auth change user stream
   Stream<UserModel?> get onAuthStateChanged {
     return _auth
@@ -32,9 +34,56 @@ class AuthService {
   }
 
 //sing in with email & password
-  Future signIn(String email, String password) async{
+Future signIn(String email, String password) async {
+  if (email.isEmpty || password.isEmpty) {
+    print('Email and password must not be empty');
+    return null;
+  }
+
+  try {
+    UserCredential result = await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return _userModelFromFirebase(result.user);
+  } catch (e) {
+    print('Error during sign-in: ${e.toString()}');
+    return null;
+  }
+}
+
+  Future signUp(String email, String password, String firstName, String lastName, String phoneNumber) async {
+    try {
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      User user = result.user!;
+
+      // Store additional user info in Firestore
+      await _firestore.collection('users').doc(user.uid).set({
+        'uid': user.uid,
+        'email': email,
+        'firstName': firstName,
+        'lastName': lastName,
+        'phoneNumber': phoneNumber,
+        'createdAt': Timestamp.now(),
+      });
+
+      // Optional: Update FirebaseAuth displayName
+      await user.updateDisplayName('$firstName $lastName');
+
+      return user;
+    } catch (e) {
+      print('SignUp Error: ${e.toString()}');
+      return null;
+    }
+  }
+
+     //sing out
+  Future signOut() async{
     try{
-      return await _auth.signInWithEmailAndPassword(email: email, password: password);
+      return await _auth.signOut();
     }
     catch(e){
       print(e.toString());

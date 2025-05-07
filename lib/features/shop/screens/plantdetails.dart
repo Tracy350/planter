@@ -4,17 +4,21 @@ import 'package:flourish/features/shop/widgets/also_like.dart';
 import 'package:flourish/features/shop/widgets/banner_tile.dart';
 import 'package:flourish/features/shop/widgets/details_tab.dart';
 import 'package:flourish/features/shop/widgets/related_products.dart';
+import 'package:flourish/models/product_models.dart';
+import 'package:flourish/models/shop_models.dart';
 import 'package:flourish/widgets/counter.dart';
 import 'package:flourish/widgets/customappbar.dart';
 import 'package:flourish/widgets/customfooter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class PlantDetailsPage extends StatefulWidget {
   final String image;
   final String name;
   final String category;
   final String price;
+  final Product product;
 
   const PlantDetailsPage({
     super.key,
@@ -22,6 +26,7 @@ class PlantDetailsPage extends StatefulWidget {
     required this.name,
     required this.category,
     required this.price,
+    required this.product,
   });
 
   @override
@@ -37,6 +42,9 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
   ];
 
   int quantity = 1;
+  void addToCart(BuildContext context) {
+    context.read<Shop>().addToCart(widget.product);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,13 +161,10 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
         ),
         const SizedBox(height: 20),
         Custombuttonfilled(
-          height: 50,
-          width: double.infinity,
-          text: 'Add to Cart',
-          onTap: () {
-            // Add to cart logic
-          },
-        ),
+            height: 50,
+            width: double.infinity,
+            text: 'Add to Cart',
+            onTap: () => addToCart(context)),
         const SizedBox(height: 20),
         Custombuttonoutlined(
           height: 50,
