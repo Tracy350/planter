@@ -12,7 +12,7 @@ class Contactpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    bool isMobile = screenWidth < 600;
+    bool isMobile = screenWidth < 900;
 
     return Scaffold(
       appBar: const CustomAppBar(),

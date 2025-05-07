@@ -19,7 +19,7 @@ class _ShoppageState extends State<Shoppage> {
   @override
   Widget build(BuildContext context) {
     final currentWidth = MediaQuery.of(context).size.width;
-    final isMobile = currentWidth > 600;
+    final isMobile = currentWidth > 700;
     final products = context.watch<Shop>().shopproducts;
     return Scaffold(
       appBar: const CustomAppBar(),

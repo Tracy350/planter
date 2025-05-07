@@ -7,7 +7,7 @@ class ResponsiveBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size.width;
-    bool isMobile = screenSize < 600;
+    bool isMobile = screenSize < 700;
 
     return Stack(
       alignment: Alignment.center,

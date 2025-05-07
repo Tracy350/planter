@@ -4,127 +4,127 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomFooter extends StatelessWidget {
+  const CustomFooter({super.key});
+
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    bool isSmallScreen = screenSize.width < 600;
+    final width = MediaQuery.of(context).size.width;
+    final isMobile = width < 600;
+    final isTablet = width >= 600 && width < 1000;
+    final isDesktop = width >= 1000;
 
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-          child: isSmallScreen
+          width: double.infinity,
+          color: Colors.grey[100],
+          padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+          child: isMobile
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _buildFooterContent(isSmallScreen),
+                  children: [
+                    _buildCompanyInfo(),
+                    const SizedBox(height: 20),
+                    _buildLinksSection(),
+                    const SizedBox(height: 20),
+                    _buildHelpSection(),
+                    const SizedBox(height: 20),
+                    _buildNewsletterSection(true),
+                  ],
                 )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _buildFooterContent(isSmallScreen),
-                ),
+              : isTablet
+                  ? Wrap(
+                      alignment: WrapAlignment.spaceAround,
+                      runSpacing: 30,
+                      spacing: 30,
+                      children: [
+                        _buildCompanyInfo(),
+                        _buildLinksSection(),
+                        _buildHelpSection(),
+                        _buildNewsletterSection(true),
+                      ],
+                    )
+                  : Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildCompanyInfo(),
+                        _buildLinksSection(),
+                        _buildHelpSection(),
+                        _buildNewsletterSection(false),
+                      ],
+                    ),
         ),
-        _buildBottominfo()
+        _buildBottomInfo(),
       ],
     );
-  }
-
-  List<Widget> _buildFooterContent(bool isSmallScreen) {
-    return [
-      _buildCompanyInfo(),
-      _buildLinksSection(),
-      _buildHelpSection(),
-      _buildNewsletterSection(isSmallScreen),
-    ];
   }
 
   Widget _buildCompanyInfo() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Image.asset('assets/fulllogo.png', height: 40),
-        const SizedBox(height: 20),
-        Text(
-          '400 University Drive Suite 200 Coral Gables, FL 33134 USA',
-          style: GoogleFonts.poppins(fontSize: 16),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBottominfo() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Divider(
-          color: Colors.grey[300],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '2025 furino. All rights reverved',
-              style: GoogleFonts.poppins(fontSize: 15),
-            ),
-            Image.asset(
-              'assets/emporia.png',
-              height: 30,
-              width: 30,
-            )
-          ],
-        )
-      ],
+    return SizedBox(
+      width: 250,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Image.asset('assets/fulllogo.png', height: 40),
+          const SizedBox(height: 20),
+          Text(
+            '400 University Drive Suite 200\nCoral Gables, FL 33134 USA',
+            style: GoogleFonts.poppins(fontSize: 16),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildLinksSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _sectionTitle('Links'),
-        _footerLink('Home'),
-        _footerLink('Shop'),
-        _footerLink('About'),
-        _footerLink('Contact'),
-      ],
-    );
+    return _buildColumnSection('Links', [
+      'Home',
+      'Shop',
+      'About',
+      'Contact',
+    ]);
   }
 
   Widget _buildHelpSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _sectionTitle('Help'),
-        _footerLink('Payment Options'),
-        _footerLink('Returns'),
-        _footerLink('Privacy Policies'),
-      ],
+    return _buildColumnSection('Help', [
+      'Payment Options',
+      'Returns',
+      'Privacy Policies',
+    ]);
+  }
+
+  Widget _buildNewsletterSection(bool isMobileOrTablet) {
+    return SizedBox(
+      width: isMobileOrTablet ? double.infinity : 250,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _sectionTitle('Newsletter'),
+          const SizedBox(height: 10),
+          CustomTextField(hintText: 'Email Address'),
+          const SizedBox(height: 10),
+          Custombuttonfilled(
+            onTap: () {},
+            height: 40,
+            text: 'Subscribe',
+            width: 120,
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildNewsletterSection(bool isSmallScreen) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _sectionTitle('Newsletter'),
-        const SizedBox(height: 10),
-        SizedBox(
-          width: isSmallScreen ? double.infinity : 250,
-          child: CustomTextField(hintText: 'Email Address'),
-        ),
-        const SizedBox(height: 10),
-        Custombuttonfilled(
-            onTap: () {}, height: 30, text: 'Subscribe', width: 100)
-        // ElevatedButton(
-        //   onPressed: () {},
-        //   style: ElevatedButton.styleFrom(
-        //     backgroundColor: Colors.blue,
-        //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        //   ),
-        //   child: const Text('Subscribe', style: TextStyle(color: Colors.white)),
-        // ),
-      ],
+  Widget _buildColumnSection(String title, List<String> items) {
+    return SizedBox(
+      width: 150,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _sectionTitle(title),
+          ...items.map(_footerLink).toList(),
+        ],
+      ),
     );
   }
 
@@ -146,7 +146,34 @@ class CustomFooter extends StatelessWidget {
     return Text(
       title,
       style: GoogleFonts.poppins(
-          color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 16),
+        color: Colors.grey[800],
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+    );
+  }
+
+  Widget _buildBottomInfo() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      color: Colors.grey[200],
+      child: Column(
+        children: [
+          const Divider(thickness: 1),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '2025 Furino. All rights reserved',
+                style: GoogleFonts.poppins(fontSize: 15),
+              ),
+              const SizedBox(width: 10),
+              Image.asset('assets/emporia.png', height: 25, width: 25),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

@@ -15,7 +15,7 @@ class Cartpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    bool isMobile = screenWidth < 600; // Check if screen width is below 600px
+    bool isMobile = screenWidth < 900; // Check if screen width is below 700px
     final cart = context.watch<Shop>().cart;
 
     return Scaffold(
@@ -69,7 +69,7 @@ class Cartpage extends StatelessWidget {
   Widget _buildCartItems(BuildContext context) {
     final cart = context.watch<Shop>().cart;
     double screenWidth = MediaQuery.of(context).size.width;
-    bool isMobile = screenWidth < 600; // Check if screen width is below 600px
+    bool isMobile = screenWidth < 900; // Check if screen width is below 700px
     if (cart.isEmpty) {
       return Padding(
           padding: const EdgeInsets.all(32.0),
@@ -135,7 +135,7 @@ class Cartpage extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            'Total Items: 2',
+            'Total Items: ${context.watch<Shop>().cart.length}',
             style: GoogleFonts.poppins(
               fontSize: 18,
               color: Colors.black87,
@@ -143,7 +143,7 @@ class Cartpage extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           Text(
-            'Total Price: \$129.98',
+            'Total Price: \$${context.watch<Shop>().totalPrice.toStringAsFixed(2)}',
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.bold,

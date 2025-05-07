@@ -17,7 +17,7 @@ class _CheckoutState extends State<Checkout> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    bool isMobile = screenWidth < 600;
+    bool isMobile = screenWidth < 900;
     return Scaffold(
       appBar: const CustomAppBar(),
       drawer: const CustomDrawer(),

@@ -117,7 +117,7 @@ class _HomepageState extends State<Homepage> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: currentWidth > 600 ? 4 : 2,
+                  crossAxisCount: currentWidth > 900 ? 4 : 2,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                   childAspectRatio: 0.9,
@@ -211,9 +211,9 @@ class _HomepageState extends State<Homepage> {
   Widget _buildRangeImage(String image, String text) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        double imageHeight = constraints.maxWidth < 600 ? 200 : 300;
-        double imageWidth = constraints.maxWidth < 600 ? 150 : 200;
-        double fontSize = constraints.maxWidth < 600 ? 16 : 20;
+        double imageHeight = constraints.maxWidth < 700 ? 200 : 300;
+        double imageWidth = constraints.maxWidth < 700 ? 150 : 200;
+        double fontSize = constraints.maxWidth < 700 ? 16 : 20;
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -247,11 +247,11 @@ class _HomepageState extends State<Homepage> {
       String image, String name, String category, String price) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        double imageHeight = constraints.maxWidth < 600 ? double.infinity : 250;
-        double imageWidth = constraints.maxWidth < 600 ? double.infinity : 140;
-        double nameFontSize = constraints.maxWidth < 600 ? 14 : 16;
-        double categoryFontSize = constraints.maxWidth < 600 ? 12 : 14;
-        double priceFontSize = constraints.maxWidth < 600 ? 14 : 16;
+        double imageHeight = constraints.maxWidth < 700 ? double.infinity : 250;
+        double imageWidth = constraints.maxWidth < 700 ? double.infinity : 140;
+        double nameFontSize = constraints.maxWidth < 700 ? 14 : 16;
+        double categoryFontSize = constraints.maxWidth < 700 ? 12 : 14;
+        double priceFontSize = constraints.maxWidth < 700 ? 14 : 16;
 
         return Stack(
           children: [

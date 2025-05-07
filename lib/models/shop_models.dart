@@ -97,12 +97,16 @@ class Shop extends ChangeNotifier {
   void addToCart(Product product) {
     userCart.add(product);
     notifyListeners();
-
- 
   }
-     //remove item from cart
-    void removeFromCart(Product product) {
-      userCart.remove(product);
-      notifyListeners();
-    }
+
+  //remove item from cart
+  void removeFromCart(Product product) {
+    userCart.remove(product);
+    notifyListeners();
+  }
+
+  // calculate total price
+  double get totalPrice {
+    return userCart.fold(0.0, (sum, item) => sum + item.price);
+  }
 }

@@ -1,5 +1,5 @@
 import 'package:flourish/auth/authenticate.dart';
-import 'package:flourish/auth/screens/sign_up.dart';
+import 'package:flourish/features/home/widget/product_search_delegate.dart';
 import 'package:flourish/models/usermodels.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +34,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
 
-    return screenSize.width >= 600
+    return screenSize.width >= 900
         ? _buildDesktopNavBar(screenSize) // Desktop Navbar
         : _buildMobileDrawer(screenSize); // Mobile Drawer
   }
@@ -86,7 +86,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
     );
   }
 
-  /// **Reusable Icon Widget for Navigation**
   Widget _buildIcon(IconData icon, String route) {
     return IconButton(
       icon: Icon(icon, color: Colors.black54),
@@ -94,21 +93,22 @@ class _CustomAppBarState extends State<CustomAppBar> {
         final userModel = Provider.of<UserModel?>(context, listen: false);
 
         if (icon == Icons.person) {
-          // Check if user is signed in
+          // Handle profile icon
           if (userModel == null) {
-            // If not signed in, navigate to sign up/sign in page
-       Navigator.push(
+            Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => Authenticate(), // Your sign-up page
-              ),
+              MaterialPageRoute(builder: (context) => Authenticate()),
             );
           } else {
-            // If signed in, navigate to the profile page
             Navigator.pushNamed(context, '/profile');
           }
+        } else if (icon == Icons.search) {
+          showSearch(
+            context: context,
+            delegate: ProductSearchDelegate(),
+          );
         } else {
-          // For other icons, navigate as usual
+          // Default navigation for other icons
           Navigator.pushNamed(context, route);
         }
       },

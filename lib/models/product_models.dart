@@ -1,4 +1,4 @@
-class Product{
+class Product {
   final String name;
   final String description;
   final String imageUrl;
@@ -6,6 +6,7 @@ class Product{
   final String category;
   final String? rating;
   final int? reviews;
+  final int quantityAvailable;
 
   Product({
     required this.name,
@@ -13,7 +14,8 @@ class Product{
     required this.imageUrl,
     required this.price,
     required this.category,
-     this.rating,
-     this.reviews,
+    this.quantityAvailable = 0,
+    this.rating,
+    this.reviews,
   });
 }

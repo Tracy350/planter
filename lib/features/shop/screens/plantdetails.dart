@@ -42,14 +42,19 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
   ];
 
   int quantity = 1;
+
   void addToCart(BuildContext context) {
-    context.read<Shop>().addToCart(widget.product);
+    if (widget.product.quantityAvailable > 0) {
+      context.read<Shop>().addToCart(widget.product);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final currentWidth = MediaQuery.of(context).size.width;
-    final isMobile = currentWidth > 600;
+    final isMobile = currentWidth > 700;
+
+    bool isInStock = widget.product.quantityAvailable > 0;
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -64,7 +69,9 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
                     children: [
                       Expanded(flex: 1, child: _buildImageSection()),
                       const SizedBox(width: 30),
-                      Expanded(flex: 1, child: _buildTextSection(context)),
+                      Expanded(
+                          flex: 1,
+                          child: _buildTextSection(context, isInStock)),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -82,7 +89,7 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
                 children: [
                   _buildImageSection(),
                   const SizedBox(height: 20),
-                  _buildTextSection(context),
+                  _buildTextSection(context, isInStock),
                   const SizedBox(height: 20),
                   const Divider(),
                   const SizedBox(height: 20),
@@ -106,7 +113,7 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: Image.asset(widget.image,
-              height: 300, width: double.infinity, fit: BoxFit.cover),
+              height: 400, width: double.infinity, fit: BoxFit.cover),
         ),
         const SizedBox(height: 12),
         SizedBox(
@@ -132,7 +139,7 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
     );
   }
 
-  Widget _buildTextSection(BuildContext context) {
+  Widget _buildTextSection(BuildContext context, bool isInStock) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -160,20 +167,43 @@ class _PlantDetailsPageState extends State<PlantDetailsPage> {
           },
         ),
         const SizedBox(height: 20),
-        Custombuttonfilled(
+        // Conditionally show buttons based on stock availability
+        if (isInStock) ...[
+          Custombuttonfilled(
             height: 50,
             width: double.infinity,
             text: 'Add to Cart',
-            onTap: () => addToCart(context)),
-        const SizedBox(height: 20),
-        Custombuttonoutlined(
-          height: 50,
-          width: double.infinity,
-          text: 'Buy Now',
-          onTap: () {
-            // Buy now logic
-          },
-        ),
+            onTap: () => addToCart(context),
+          ),
+          const SizedBox(height: 20),
+          Custombuttonoutlined(
+            height: 50,
+            width: double.infinity,
+            text: 'Buy Now',
+            onTap: () {
+              // Buy now logic
+            },
+          ),
+        ] else ...[
+          // Show "Sold Out" text when out of stock
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[400],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            padding: const EdgeInsets.all(20),
+            width: double.infinity,
+            child: Center(
+              child: Text(
+                'Sold Out',
+                style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+        ],
       ],
     );
   }
