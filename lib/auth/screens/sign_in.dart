@@ -174,7 +174,9 @@ class _SignInScreenState extends State<SignInScreen>
                               ? 200
                               : MediaQuery.of(context).size.width,
                           text: 'Sign In',
-                          onTap: () {}),
+                          onTap: () {
+                            signIn();
+                          }),
                       const SizedBox(height: 10),
                       TextButton(
                         onPressed: () {},
@@ -190,18 +192,22 @@ class _SignInScreenState extends State<SignInScreen>
                           ),
                           children: [
                             TextSpan(
-                                text: ' Sign Up',
-                                style: GoogleFonts.poppins(
-                                  color: Colors.green, // Use any accent color
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  decoration: TextDecoration.underline,
-                                ),
-                                recognizer: TapGestureRecognizer()
+                              text: ' Sign Up',
+                              style: GoogleFonts.poppins(
+                                color: Colors.green, // Use any accent color
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.underline,
+                              ),
+                              recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                 Navigator.push(context, MaterialPageRoute(builder: (context)=> SignUpScreen()));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              SignUpScreen()));
                                 },
-                                ),
+                            ),
                           ],
                         ),
                       )

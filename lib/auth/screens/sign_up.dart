@@ -72,7 +72,7 @@ class _SignUpScreenState extends State<SignUpScreen>
 
 //attempt login
     try {
-      await authService.signInWithEmailAndPassword(email, password);
+      await authService.signUpWithEmailAndPassword(email, password);
       Navigator.pop(context);
     } catch (e) {
       print(e);
@@ -202,52 +202,13 @@ class _SignUpScreenState extends State<SignUpScreen>
                                   ? 200
                                   : MediaQuery.of(context).size.width,
                               text: 'Sign Up',
-                              onTap: () {}
-                              // () async {
-                              //   if (_formKey.currentState!.validate()) {
-                              //     setState(() => loading = true);
-                              //     dynamic result = await _authService.signUp(
-                              //       _emailController.text.trim(),
-                              //       _passwordController.text.trim(),
-                              //       _firstNameController.text.trim(),
-                              //       _lastNameController.text.trim(),
-                              //       _phoneNumberController.text.trim(),
-                              //     );
-                              //     if (result == null) {
-                              //       setState(() {
-                              //         error = 'Please provide a valid email';
-                              //         loading = false;
-                              //       });
-                              //     } else {
-                              //       // Handle success (e.g., navigate or show dialog)
-                              //     }
-                              //   }
-                              // },
+                              onTap: () {
+                                signUp();
+                              }
+                            
                               ),
 
-                          // Custombuttonfilled(
-                          //   height: 50,
-                          //   width: isMobile
-                          //       ? 200
-                          //       : MediaQuery.of(context).size.width,
-                          //   text: 'Sign In',
-                          //   onTap: () async {
-                          //     widget.toggleView();
-                          //     // Implement your sign-in logic here
-                          //     print('Email: $email, Password: $password');
-                          //     if (_formKey.currentState!.validate()) {
-                          //       setState(() => loading = true);
-                          //       dynamic result =
-                          //           await _authService.signUp(email, password);
-                          //       if (result == null) {
-                          //         setState(() {
-                          //           error = 'Please provide n valid email';
-                          //           loading = false;
-                          //         });
-                          //       }
-                          //     }
-                          //   },
-                          // ),
+                          
                           const SizedBox(height: 10),
                           TextButton(
                             onPressed: () {},
